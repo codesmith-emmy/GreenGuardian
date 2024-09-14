@@ -4,7 +4,7 @@ import { Form, TextBox, FileUploader } from "@components/FormControls";
 
 const GetStarted = () => {
   const [species, setSpecies] = useState("");
-  const [image, setImage] = useState(null); // Store the image and its preview
+  const [images, setImages] = useState([]); // Store the image and its preview
   const [carePlan, setCarePlan] = useState(null);
   const [healthStatus, setHealthStatus] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -63,8 +63,11 @@ const GetStarted = () => {
             Upload Plant Image
           </label>
           <FileUploader
-            file={image} // Pass the image state
-            setFile={setImage} // Set the file state
+            files={images}
+            setFiles={setImages}
+            handleDelete={(index) =>
+              setImages(images.filter((_, i) => i !== index))
+            }
             className="block w-full text-gray-700 file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-md file:text-sm file:font-semibold file:bg-green-100 file:text-green-700 hover:file:bg-green-200"
           />
         </div>
