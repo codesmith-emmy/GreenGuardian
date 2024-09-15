@@ -7,23 +7,23 @@ const FileUploader = ({
   id,
   fileTypes = ["image/jpeg", "image/png", "image/gif"], // Restrict to image file types
   className,
-  files,
-  setFiles,
-  handleDelete,
+  file, // Single file object
+  setFile, // Function to set the single file
+  handleDelete, // Function to handle file removal
 }) => {
   const fileInputRef = useRef(null);
 
   const handleFiles = (selectedFiles) => {
-    const filteredFiles = Array.from(selectedFiles).filter((file) =>
-      fileTypes.includes(file.type)
-    );
+    const selectedFile = selectedFiles[0]; // Since we only allow one file, take the first one
 
-    const newFiles = filteredFiles.map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-    }));
+    if (fileTypes.includes(selectedFile.type)) {
+      const newFile = {
+        file: selectedFile,
+        preview: URL.createObjectURL(selectedFile),
+      };
 
-    setFiles([...files, ...newFiles]);
+      setFile(newFile); // Set the selected file
+    }
   };
 
   const handleDragOver = (e) => {
@@ -32,13 +32,13 @@ const FileUploader = ({
 
   const handleDrop = (e) => {
     e.preventDefault();
-    const droppedFiles = e.dataTransfer.files;
-    handleFiles(droppedFiles);
+    const droppedFile = e.dataTransfer.files[0];
+    handleFiles([droppedFile]); // Handle only the first dropped file
   };
 
   const handleFileChange = (e) => {
-    const selectedFiles = e.target.files;
-    handleFiles(selectedFiles);
+    const selectedFile = e.target.files[0];
+    handleFiles([selectedFile]); // Handle only the first selected file
   };
 
   const handleClick = () => {
@@ -68,7 +68,6 @@ const FileUploader = ({
           className="hidden"
           accept={fileTypes.join(",")}
           onChange={handleFileChange}
-          multiple
         />
         <label className="flex flex-col items-center cursor-pointer">
           <div className="flex justify-center mb-2">
@@ -80,30 +79,28 @@ const FileUploader = ({
           </p>
         </label>
       </div>
-      {files?.length > 0 && (
+
+      {file && (
         <div className="mt-4">
-          <ul>
-            {files.map((file, index) => (
-              <li
-                key={index}
-                className="flex items-center justify-between border border-green-300 p-3 rounded-lg bg-white bg-opacity-30 mb-2"
-              >
-                <div className="mr-2">
-                  <FaImage className="text-green-500" />
-                </div>
-                <p className="text-sm text-gray-800 font-medium">
-                  {file.file.name}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(index)}
-                  className="text-red-400 hover:text-red-600"
-                >
-                  <FaTrashAlt />
-                </button>
-              </li>
-            ))}
-          </ul>
+          <div className="flex items-center justify-between border border-green-300 p-3 rounded-lg bg-white bg-opacity-30 mb-2">
+            <div className="mr-2">
+              <img
+                src={file.preview}
+                alt={file.file.name}
+                className="w-10 h-10 object-cover"
+              />
+            </div>
+            <p className="text-sm text-gray-800 font-medium">
+              {file.file.name}
+            </p>
+            <button
+              type="button"
+              onClick={() => handleDelete()}
+              className="text-red-400 hover:text-red-600"
+            >
+              <FaTrashAlt />
+            </button>
+          </div>
         </div>
       )}
     </div>

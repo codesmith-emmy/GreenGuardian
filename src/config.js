@@ -1,12 +1,12 @@
 import axios from "axios";
-const baseURL = "https://document-analyzer-python-production.up.railway.app";
+const baseURL = "https://mehak23.pythonanywhere.com";
 
 const clientBaseURL = axios.create({
   baseURL,
 });
 
 const clientEndPoints = {
-  uploadDoc: "/document/upload",
-  queryDoc: "/document/query",
+  createPlant: "/api/create",
+  plantDetail: "/api/detail",
 };
 export { clientBaseURL, clientEndPoints };
