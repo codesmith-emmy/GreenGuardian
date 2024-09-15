@@ -38,7 +38,7 @@ const GetStarted = () => {
       if (response.status >= 200 && response.status < 300) {
         toast.success("Data Submitted Successfully");
 
-        const plantId = response.data.id; // Capture the ID from POST response
+        const plantId = response?.data?.id; // Capture the ID from POST response
         setSpecies("");
         setImage(null); // Clear the image state here
         fetchPlantDetails(plantId); // Pass the plant ID to fetch details
@@ -118,41 +118,41 @@ const GetStarted = () => {
             Plant Care Details
           </h3>
           <p>
-            <strong>Species:</strong> {plantDetails.species}
+            <strong>Species:</strong> {plantDetails?.species}
           </p>
           <p>
-            <strong>Watering Instructions:</strong> {plantDetails.water}
+            <strong>Watering Instructions:</strong> {plantDetails?.water}
           </p>
           <p>
-            <strong>Light Requirements:</strong> {plantDetails.light}
+            <strong>Light Requirements:</strong> {plantDetails?.light}
           </p>
           <p>
-            <strong>Toxicity:</strong> {plantDetails.toxicity}
+            <strong>Toxicity:</strong> {plantDetails?.toxicity}
           </p>
           <p>
-            <strong>Humidity:</strong> {plantDetails.humidity}
+            <strong>Humidity:</strong> {plantDetails?.humidity}
           </p>
           <p>
-            <strong>Fertilizer:</strong> {plantDetails.fertilizer}
+            <strong>Fertilizer:</strong> {plantDetails?.fertilizer}
           </p>
           <p>
-            <strong>Health Status:</strong> {plantDetails.health_status}
+            <strong>Health Status:</strong> {plantDetails?.health_status}
           </p>
 
           {/* Show Health Details only if the plant is unhealthy */}
-          {plantDetails.health_status === "Unhealthy" && (
+          {plantDetails?.health_status === "Unhealthy" && (
             <p>
               <strong>Health Details:</strong> {plantDetails.health_detail}
             </p>
           )}
 
           <p>
-            <strong>Notes:</strong> {plantDetails.notes}
+            <strong>Notes:</strong> {plantDetails?.notes}
           </p>
           <div className="mt-4">
             <strong>Common Names:</strong>
             <ul className="list-disc pl-5">
-              {plantDetails.common_names.map((name, index) => (
+              {plantDetails?.common_names?.map((name, index) => (
                 <li key={index}>{name}</li>
               ))}
             </ul>
