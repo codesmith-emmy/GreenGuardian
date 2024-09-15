@@ -57,8 +57,11 @@ const GetStarted = () => {
   const fetchPlantDetails = async () => {
     try {
       const response = await clientBaseURL.get(
-        `${clientEndPoints.plantDetail}`
-      );
+            `${clientEndPoints.plantDetail}`,
+            {
+                withCredentials: true,  // Ensure cookies are sent with the request
+            }
+        );
       console.log("response in get api of plant details", response);
       if (response.status >= 200 && response.status < 300) {
         setPlantDetails(response.data);
