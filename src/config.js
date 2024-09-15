@@ -7,6 +7,6 @@ const clientBaseURL = axios.create({
 
 const clientEndPoints = {
   createPlant: "/api/create/",
-  plantDetail: "/api/detail/",
+  plantDetail: "/api/detail2/",
 };
 export { clientBaseURL, clientEndPoints };

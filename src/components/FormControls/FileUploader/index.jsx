@@ -45,6 +45,13 @@ const FileUploader = ({
     fileInputRef.current.click();
   };
 
+  const handleClearInput = () => {
+    setFile(null); // Clear the file state
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // Clear the file input element
+    }
+  };
+
   return (
     <div className={className}>
       {label && (
@@ -95,7 +102,7 @@ const FileUploader = ({
             </p>
             <button
               type="button"
-              onClick={() => handleDelete()}
+              onClick={() => handleClearInput()} // Call to clear input and file
               className="text-red-400 hover:text-red-600"
             >
               <FaTrashAlt />

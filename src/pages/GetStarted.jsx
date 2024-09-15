@@ -5,10 +5,9 @@ import { clientBaseURL, clientEndPoints } from "../config";
 
 const GetStarted = () => {
   const [species, setSpecies] = useState("");
-  const [image, setImage] = useState(null); // Store the image and its preview
-  // const [carePlan, setCarePlan] = useState(null);
-  // const [healthStatus, setHealthStatus] = useState(null);
+  const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [plantDetails, setPlantDetails] = useState(null); // Store plant details
 
   const handleSpeciesChange = (e) => {
     setSpecies(e.target.value);
@@ -19,12 +18,10 @@ const GetStarted = () => {
     setLoading(true);
     const formData = new FormData();
 
-    // Append species to the formData
     formData.append("species", species);
 
-    // Append image file if available
     if (image) {
-      formData.append("plant", image.file); // 'plant' key to send image file
+      formData.append("plant", image.file);
     }
 
     try {
@@ -37,13 +34,13 @@ const GetStarted = () => {
           },
         }
       );
-      console.log("Response in Get Started:", response);
+
       if (response.status >= 200 && response.status < 300) {
         toast.success("Data Submitted Successfully");
 
-        // Reset species and image after successful upload
         setSpecies("");
-        setImage(null);
+        setImage(null); // Clear the image state here
+        fetchPlantDetails(); // Fetch plant details after successful POST
       }
     } catch (error) {
       if (error.response) {
@@ -53,6 +50,22 @@ const GetStarted = () => {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Function to fetch plant details
+  const fetchPlantDetails = async () => {
+    try {
+      const response = await clientBaseURL.get(
+        `${clientEndPoints.plantDetail}`
+      );
+      console.log("response in get api of plant details", response);
+      if (response.status >= 200 && response.status < 300) {
+        setPlantDetails(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching plant details:", error);
+      toast.error("Failed to fetch plant details.");
     }
   };
 
@@ -82,7 +95,7 @@ const GetStarted = () => {
           <FileUploader
             file={image}
             setFile={setImage}
-            handleDelete={() => setImage(null)} // Reset the image state on delete
+            handleDelete={() => setImage(null)}
             className="block w-full text-gray-700 file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-md file:text-sm file:font-semibold file:bg-green-100 file:text-green-700 hover:file:bg-green-200"
           />
         </div>
@@ -96,24 +109,55 @@ const GetStarted = () => {
           </button>
         </div>
       </Form>
-      {/* 
-      {carePlan && (
+
+      {/* Display Plant Details Below the Form */}
+      {plantDetails && (
         <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
           <h3 className="text-xl font-semibold text-green-700 mb-4">
-            Personalized Care Plan
+            Plant Care Details
           </h3>
-          <p className="text-gray-800">{carePlan}</p>
+          <p>
+            <strong>Species:</strong> {plantDetails.species}
+          </p>
+          <p>
+            <strong>Watering Instructions:</strong> {plantDetails.water}
+          </p>
+          <p>
+            <strong>Light Requirements:</strong> {plantDetails.light}
+          </p>
+          <p>
+            <strong>Toxicity:</strong> {plantDetails.toxicity}
+          </p>
+          <p>
+            <strong>Humidity:</strong> {plantDetails.humidity}
+          </p>
+          <p>
+            <strong>Fertilizer:</strong> {plantDetails.fertilizer}
+          </p>
+          <p>
+            <strong>Health Status:</strong> {plantDetails.health_status}
+          </p>
+
+          {/* Show Health Details only if the plant is unhealthy */}
+          {plantDetails.health_status === "Unhealthy" && (
+            <p>
+              <strong>Health Details:</strong> {plantDetails.health_detail}
+            </p>
+          )}
+
+          <p>
+            <strong>Notes:</strong> {plantDetails.notes}
+          </p>
+          <div className="mt-4">
+            <strong>Common Names:</strong>
+            <ul className="list-disc pl-5">
+              {plantDetails.common_names.map((name, index) => (
+                <li key={index}>{name}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
-
-      {healthStatus && (
-        <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
-          <h3 className="text-xl font-semibold text-red-700 mb-4">
-            Plant Health Assessment
-          </h3>
-          <p className="text-gray-800">{healthStatus}</p>
-        </div>
-      )} */}
     </div>
   );
 };
