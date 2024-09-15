@@ -38,9 +38,10 @@ const GetStarted = () => {
       if (response.status >= 200 && response.status < 300) {
         toast.success("Data Submitted Successfully");
 
+        const plantId = response.data.id; // Capture the ID from POST response
         setSpecies("");
         setImage(null); // Clear the image state here
-        fetchPlantDetails(); // Fetch plant details after successful POST
+        fetchPlantDetails(plantId); // Pass the plant ID to fetch details
       }
     } catch (error) {
       if (error.response) {
@@ -54,14 +55,14 @@ const GetStarted = () => {
   };
 
   // Function to fetch plant details
-  const fetchPlantDetails = async () => {
+  const fetchPlantDetails = async (id) => {
     try {
       const response = await clientBaseURL.get(
-        `${clientEndPoints.plantDetail}`
+        `${clientEndPoints.plantDetail}?image_id=${id}`
       );
       console.log("response in get api of plant details", response);
       if (response.status >= 200 && response.status < 300) {
-        setPlantDetails(response.data);
+        setPlantDetails(response?.data?.data);
       }
     } catch (error) {
       console.error("Error fetching plant details:", error);
