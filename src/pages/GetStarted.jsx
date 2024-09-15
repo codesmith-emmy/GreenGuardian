@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { Form, TextBox, FileUploader } from "@components/FormControls";
 import { clientBaseURL, clientEndPoints } from "../config";
@@ -8,6 +8,7 @@ const GetStarted = () => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [plantDetails, setPlantDetails] = useState(null); // Store plant details
+  const plantDetailsRef = useRef(null); // Create ref for plant details section
 
   const handleSpeciesChange = (e) => {
     setSpecies(e.target.value);
@@ -60,9 +61,10 @@ const GetStarted = () => {
       const response = await clientBaseURL.get(
         `${clientEndPoints.plantDetail}?image_id=${id}`
       );
-      console.log("response in get api of plant details", response);
       if (response.status >= 200 && response.status < 300) {
-        setPlantDetails(response?.data?.data);
+        setPlantDetails(response?.data);
+        toast.success("Plant details fetched successfully.");
+        plantDetailsRef.current.scrollIntoView({ behavior: "smooth" }); // Scroll to plant details section
       }
     } catch (error) {
       console.error("Error fetching plant details:", error);
@@ -113,7 +115,10 @@ const GetStarted = () => {
 
       {/* Display Plant Details Below the Form */}
       {plantDetails && (
-        <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
+        <div
+          ref={plantDetailsRef} // Attach ref to plant details section
+          className="mt-8 p-6 bg-white rounded-lg shadow-md"
+        >
           <h3 className="text-xl font-semibold text-green-700 mb-4">
             Plant Care Details
           </h3>
