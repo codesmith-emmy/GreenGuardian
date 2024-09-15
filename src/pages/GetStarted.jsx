@@ -68,7 +68,6 @@ const GetStarted = () => {
       }
     } catch (error) {
       console.error("Error fetching plant details:", error);
-      toast.error("Failed to fetch plant details.");
     }
   };
 
